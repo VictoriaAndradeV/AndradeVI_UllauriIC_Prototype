@@ -14,8 +14,8 @@ public class ControladorJuego {
     private PanelTableroSnake panelTablero;
     private final ArrayList<ElementoBase> elementos;
     private int contComida = 1; //inicia en 1 porq el elemento base ya tiene el 0
-    
     private Serpiente serpiente;
+    private boolean juegoIniciado = false;
 
     public ControladorJuego(PanelTableroSnake panel) {
         this.panelTablero = panel;
@@ -42,6 +42,8 @@ public class ControladorJuego {
         elementos.add(segmentoBase);
         
         serpiente = new Serpiente((Segmento) segmentoBase, cabezaX, cabezaY);
+        //false porque aun no empieza el juego
+        juegoIniciado = false;
         panelTablero.repaint();
     }
     
@@ -144,14 +146,52 @@ public class ControladorJuego {
         return null;
     }
     
-    public void moverSerpiente(Direccion dir){
+        
+    public void iniciarJuego(){
         if (serpiente == null){
             JOptionPane.showMessageDialog(panelTablero,
-            "Pulsar el boton Iniciar Objetos para crear la serpiente y sus comidas",
-            "Mover Serpiente", JOptionPane.WARNING_MESSAGE);
+                "Antes aplastar 'Iniciar objetos'",
+                "Iniciar Juego", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        juegoIniciado = true;
+        panelTablero.requestFocusInWindow();
+    }
+    
+    public void moverSerpiente(Direccion dir) {
+        if (!juegoIniciado) {
+            JOptionPane.showMessageDialog(panelTablero,
+                    "Pulsa 'INICIAR JUEGO' para comenzar.",
+                    "Mover Serpiente", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        if (serpiente == null) {
+            JOptionPane.showMessageDialog(panelTablero,
+                    "Pulsar el boton Iniciar Objetos para crear la serpiente y sus comidas",
+                    "Mover Serpiente", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        //mover
         serpiente.moverSerpiente(panelTablero, dir);
+
+        //si cabeza sobre una comida
+        int cx = serpiente.getCabezaX();
+        int cy = serpiente.getCabezaY();
+        
+        ElementoBase comidaEnCelda = panelTablero.getElementoEnCelda(cx, cy, "comidaBase");
+        if (comidaEnCelda != null) {
+            //elimina comida del panel
+            panelTablero.eliminarElemento(comidaEnCelda);
+
+            //Clona segmento base y agrega al final
+            Segmento segmentoClonado = (Segmento) RepositorioElementoBase.getElementoBaseClonado("segmentoBase");
+            if (segmentoClonado != null) {
+                elementos.add(segmentoClonado);
+                serpiente.agregarSegmento(panelTablero, segmentoClonado);
+            }
+        }
+
         panelTablero.repaint();
     }
     

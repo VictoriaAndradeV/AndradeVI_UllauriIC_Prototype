@@ -16,7 +16,9 @@ public class PanelTableroSnake extends JPanel {
     private ArrayList<ElementoBase> elementos = new ArrayList<>();
     
     public PanelTableroSnake() {
-        initComponents();  
+        initComponents();
+        setFocusable(true); //recibe el foco de teclado
+        setFocusTraversalKeysEnabled(false); //evita que las flechas muevan el foco entre controles
     }
     
     public void setElementos(ArrayList<ElementoBase> elementos){
@@ -147,6 +149,35 @@ public class PanelTableroSnake extends JPanel {
             .addGap(0, 362, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+    
+    //-------------------------------------------------
+    // Elimina un elemento del tablero
+    public void eliminarElemento(ElementoBase e) {
+        //si no existe, no hace nada
+        if (e == null) {
+            return;
+        }
+        // quita de la lista de elementos que se dibujan
+        elementos.remove(e);
+    }
+
+    // Busca un elemento en una celda especifica del tablero
+    public ElementoBase getElementoEnCelda(int celdaX, int celdaY, String tipoEsperado) {
+        for (ElementoBase e : elementos) {
+            //calcula la celda del elemento
+            int ex = getCeldaElementoX(e);
+            int ey = getCeldaElementoY(e);
+
+            //y esta justo en la celda que buscamos
+            if (ex == celdaX && ey == celdaY) {
+                //y si el tipo coincide , devuelve
+                if (tipoEsperado == null || tipoEsperado.equals(e.getTipoElemento())) {
+                    return e;
+                }
+            }
+        }
+        return null;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

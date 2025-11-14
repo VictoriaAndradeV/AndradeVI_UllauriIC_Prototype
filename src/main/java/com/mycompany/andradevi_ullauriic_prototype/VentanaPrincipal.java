@@ -26,8 +26,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         
         controlador = new ControladorJuego((PanelTableroSnake) jPanel1);
         
-        
-        addKeyListener(new KeyAdapter(){
+        // === Listener de teclado en el TABLERO ===
+        PanelTableroSnake tablero = (PanelTableroSnake) jPanel1;
+        tablero.setFocusable(true);
+        tablero.addKeyListener(new KeyAdapter(){
             @Override
             public void keyPressed(KeyEvent e){
                 switch(e.getKeyCode()){
@@ -245,33 +247,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnActualizarActionPerformed
 
     private void btnIniciarJuegoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIniciarJuegoActionPerformed
-        this.requestFocusInWindow();
+        controlador.iniciarJuego();
+        ((PanelTableroSnake) jPanel1).requestFocusInWindow();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                ((PanelTableroSnake) jPanel1).requestFocusInWindow();
+            }
+        });
     }//GEN-LAST:event_btnIniciarJuegoActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
